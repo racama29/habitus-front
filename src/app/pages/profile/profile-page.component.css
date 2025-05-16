@@ -1,0 +1,18 @@
+.section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .section {
+    margin-bottom: 1rem;
+  }
+  
+  .section label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  input {
+    margin-right: 1rem;
+    padding: 0.4rem;
+  }
+  
