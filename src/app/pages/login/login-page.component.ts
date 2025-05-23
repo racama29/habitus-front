@@ -1,35 +1,39 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../core/auth.service';
+
+
 
 @Component({
-  selector: 'app-login-page',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
+  selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent {
-  email = '';
-  password = '';
-  isRegister = false;
-  error = '';
+  email: string = '';
+  password: string = '';
+  error: string = '';
+  isLoading: boolean = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  async submit() {
-    try {
-      if (this.isRegister) {
-        await this.auth.register(this.email, this.password);
-      } else {
-        await this.auth.login(this.email, this.password);
+  submit() {
+    this.error = '';
+    this.isLoading = true;
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: (userId: number) => {
+        this.router.navigate(['/home']);
+      },
+      error: (err: any) => {
+        this.error = 'Error al iniciar sesión';
+        console.error(err);
       }
-      this.router.navigate(['/home']);
-    } catch (err: any) {
-      this.error = err.message;
-    }
+    });
   }
 }

@@ -1,89 +1,99 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HabitService } from '../../core/habit/habit.service';
+import { AuthService } from '../../core/auth.service';
+import { Habit } from '../../core/habit/habit.service';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { HabitService, Habit } from '../../core/habit/habit.service';
-import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
-import { onAuthStateChanged } from '@angular/fire/auth';
 
 @Component({
-  selector: 'app-habit-board',
   standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule],
+  imports: [CommonModule, FormsModule],
+  selector: 'app-habit-board',
   templateUrl: './habit-board.component.html',
   styleUrls: ['./habit-board.component.css']
 })
 export class HabitBoardComponent implements OnInit {
+  userId!: number;
+
   pending: Habit[] = [];
   inProgress: Habit[] = [];
   completed: Habit[] = [];
 
-  showForm = false;
-
-  newHabit = {
+  newHabit: Partial<Habit> = {
     titulo: '',
     objetivo: '',
-    frecuencia: '',
+    frecuencia: 'DAILY',
+    fechaFin: '',
     color: '#2196f3'
   };
 
-  async addHabit() {
-    const user = await this.auth.currentUser;
-    if (!user) return;
-  
-    const habitData = {
-      ...this.newHabit,
-      estado: 'pending',
-      userId: user.uid
-    };
-  
-    this.habitService.createHabit(habitData).subscribe((habit: Habit) => {
-      this.pending.push(habit);
-      this.cancel();
-    });
-    
+  showForm: boolean = false;
+
+  constructor(
+    private habitService: HabitService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const uid = this.authService.getUserId();
+    if (!uid) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.userId = uid;
+    this.loadHabits();
   }
 
-  cancel() {
+  loadHabits(): void {
+    this.habitService.getHabitsByUser(this.userId.toString()).subscribe(habits => {
+      this.pending = habits.filter(h => h.estado === 'pending');
+      this.inProgress = habits.filter(h => h.estado === 'in_progress');
+      this.completed = habits.filter(h => h.estado === 'completed');
+    });
+  }
+
+  addHabit(): void {
+    if (!this.newHabit.titulo || !this.newHabit.objetivo || !this.newHabit.frecuencia) return;
+  
+    const habitData: any = {
+      titulo: this.newHabit.titulo,
+      objetivo: this.newHabit.objetivo,
+      frecuencia: this.newHabit.frecuencia,
+      color: this.newHabit.color,
+      estado: 'pending'
+    };
+  
+    if (this.newHabit.fechaFin && this.newHabit.fechaFin !== '') {
+      habitData.fechaFin = this.newHabit.fechaFin;
+    }
+
+    this.habitService.addHabit(this.userId, habitData as Habit).subscribe((createdHabit: Habit) => {
+      this.showForm = false;
+      this.newHabit = {
+        titulo: '',
+        objetivo: '',
+        frecuencia: 'DAILY',
+        fechaFin: '',
+        color: '#2196f3'
+      };
+      this.pending.push(createdHabit);
+    });
+  }
+
+  cancel(): void {
     this.showForm = false;
-    this.newHabit = {
-      titulo: '',
-      objetivo: '',
-      frecuencia: '',
-      color: '#2196f3'
-    };
   }
 
-  private habitService = inject(HabitService);
-  private auth = inject(Auth);
-
-  async ngOnInit() {
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this.habitService.getHabitsByUser(user.uid).subscribe(habits => {
-          this.pending = habits.filter(h => h.estado === 'pending');
-          this.inProgress = habits.filter(h => h.estado === 'in_progress');
-          this.completed = habits.filter(h => h.estado === 'completed');
-        });
-      }
-    });
+  marcarComoEnProceso(habit: Habit): void {
+    const updatedHabit = { ...habit, estado: 'in_progress' as 'in_progress' };
+    this.habitService.updateHabit(updatedHabit).subscribe(() => this.loadHabits());
   }
 
-  marcarComoEnProceso(habit: Habit) {
-    habit.estado = 'in_progress';
-    this.habitService.updateHabitState(habit.id, 'in_progress').subscribe(() => {
-      this.inProgress.push(habit);
-      this.pending = this.pending.filter(h => h.id !== habit.id);
-    });
+  marcarComoCompletado(habit: Habit): void {
+    const updatedHabit = { ...habit, estado: 'completed' as 'completed' };
+    this.habitService.updateHabit(updatedHabit).subscribe(() => this.loadHabits());
   }
-  
-  marcarComoCompletado(habit: Habit) {
-    habit.estado = 'completed';
-    this.habitService.updateHabitState(habit.id, 'completed').subscribe(() => {
-      this.completed.push(habit);
-      this.inProgress = this.inProgress.filter(h => h.id !== habit.id);
-    });
-  }
-  
-  
-  }
+}

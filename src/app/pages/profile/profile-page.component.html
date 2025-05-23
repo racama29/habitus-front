@@ -8,39 +8,13 @@
 <!-- NOMBRE -->
 <div class="section">
   <label><strong>Nombre:</strong></label>
-  <div *ngIf="!editing.firstName">
-    {{ userData?.firstName }}
-    <button (click)="enableEdit('firstName')">Actualizar</button>
+  <div *ngIf="!editing['nombre']">
+    {{ userData?.nombre }}
+    <button (click)="enableEdit('nombre')">Actualizar</button>
   </div>
-  <div *ngIf="editing.firstName">
-    <input [(ngModel)]="userData.firstName" />
-    <button (click)="updateField('firstName')">Guardar</button>
-  </div>
-</div>
-
-<!-- APELLIDOS -->
-<div class="section">
-  <label><strong>Apellidos:</strong></label>
-  <div *ngIf="!editing.lastName">
-    {{ userData?.lastName }}
-    <button (click)="enableEdit('lastName')">Actualizar</button>
-  </div>
-  <div *ngIf="editing.lastName">
-    <input [(ngModel)]="userData.lastName" />
-    <button (click)="updateField('lastName')">Guardar</button>
-  </div>
-</div>
-
-<!-- TELÉFONO -->
-<div class="section">
-  <label><strong>Teléfono:</strong></label>
-  <div *ngIf="!editing.phone">
-    {{ userData?.phone }}
-    <button (click)="enableEdit('phone')">Actualizar</button>
-  </div>
-  <div *ngIf="editing.phone">
-    <input [(ngModel)]="userData.phone" />
-    <button (click)="updateField('phone')">Guardar</button>
+  <div *ngIf="editing['nombre']">
+    <input [(ngModel)]="userData.nombre" />
+    <button (click)="updateField('nombre')">Guardar</button>
   </div>
 </div>
 
@@ -48,6 +22,17 @@
 <div class="section">
   <h3>Cambiar contraseña</h3>
   <button (click)="resetPassword()">Enviar correo de recuperación</button>
+</div>
+
+<!-- MÉTRICAS -->
+<div *ngIf="metrics">
+  <h3>📊 Estadísticas de hábitos</h3>
+  <ul>
+    <li>Total: {{ metrics.total }}</li>
+    <li>Completados: {{ metrics.completados }}</li>
+    <li>En proceso: {{ metrics.enProceso }}</li>
+    <li>Fallados: {{ metrics.fallidos }}</li>
+  </ul>
 </div>
 
 <!-- NAVEGACIÓN -->

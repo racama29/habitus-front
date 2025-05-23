@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/habitus-frontend",
+    "public": "dist/habitus-frontend/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

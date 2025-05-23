@@ -9,11 +9,19 @@ export interface Habit {
   frecuencia: string;
   color: string;
   estado: 'pending' | 'in_progress' | 'completed';
+  fechaFin?: string;
 }
+
+export interface HabitMetrics {
+  total: number;
+  completados: number;
+  fallidos: number;
+  enProceso: number;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class HabitService {
-  private baseUrl = 'http://localhost:8080/api/habits'; // Cambia según backend
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +37,16 @@ export class HabitService {
     return this.http.put(`http://localhost:8080/api/habits/${id}/estado`, { estado });
   }
   
-
+  getUserMetrics(userId: string): Observable<HabitMetrics> {
+    return this.http.get<HabitMetrics>(`http://localhost:8080/api/habits/metrics/${userId}`);
+  }
   
+  addHabit(userId: number, habit: Habit): Observable<Habit> {
+    return this.http.post<Habit>(`http://localhost:8080/api/habits/user/${userId}`, habit);
+  }
+  
+  updateHabit(habit: Habit): Observable<Habit> {
+    return this.http.put<Habit>(`http://localhost:8080/api/habits/${habit.id}`, habit);
+  }
 
 }

@@ -1,54 +1,68 @@
-<!-- Botón para mostrar el formulario -->
-<button class="add-button" (click)="showForm = true">+ Añadir hábito</button>
+<div class="habit-board-container">
+  <!-- BOTÓN PARA MOSTRAR FORMULARIO -->
+  <div class="section">
+    <button *ngIf="!showForm" (click)="showForm = true">+ Crear nuevo hábito</button>
+  </div>
 
-<!-- Modal del formulario -->
-<div class="modal" *ngIf="showForm">
-  <form (ngSubmit)="addHabit()" class="form">
-    <h3>Nuevo hábito</h3>
+  <!-- FORMULARIO DE CREACIÓN -->
+  <div class="modal" *ngIf="showForm">
+    <form (ngSubmit)="addHabit()">
+      <h3>Nuevo hábito</h3>
 
-    <input type="text" placeholder="Título" [(ngModel)]="newHabit.titulo" name="titulo" required />
-    <input type="text" placeholder="Objetivo" [(ngModel)]="newHabit.objetivo" name="objetivo" required />
-    <input type="text" placeholder="Frecuencia" [(ngModel)]="newHabit.frecuencia" name="frecuencia" required />
-    <label>Color: <input type="color" [(ngModel)]="newHabit.color" name="color" /></label>
+      <label>Título:</label>
+      <input type="text" [(ngModel)]="newHabit.titulo" name="titulo" required />
 
-    <div class="form-buttons">
-      <button type="submit">Guardar</button>
-      <button type="button" (click)="cancel()">Cancelar</button>
-    </div>
-  </form>
-</div>
+      <label>Objetivo:</label>
+      <input type="text" [(ngModel)]="newHabit.objetivo" name="objetivo" required />
 
-<div class="board">
+      <label>Frecuencia:</label>
+      <select [(ngModel)]="newHabit.frecuencia" name="frecuencia" required>
+        <option value="DAILY">Diario</option>
+        <option value="WEEKLY">Semanal</option>
+      </select>
+
+      <label>Fecha de finalización (opcional):</label>
+      <input type="date" [(ngModel)]="newHabit.fechaFin" name="fechaFin" />
+
+      <label>Color:</label>
+      <input type="color" [(ngModel)]="newHabit.color" name="color" />
+
+      <div class="form-buttons">
+        <button type="submit">Guardar</button>
+        <button type="button" (click)="cancel()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- TABLERO DE HÁBITOS -->
+  <div class="columns">
+    <!-- PENDING -->
     <div class="column">
       <h3>Pendientes</h3>
-      <div class="card" *ngFor="let habit of pending">
-        <strong>{{ habit.titulo }}</strong>
+      <div class="card" *ngFor="let habit of pending" [style.borderColor]="habit.color">
+        <p><strong>{{ habit.titulo }}</strong></p>
         <p>{{ habit.objetivo }}</p>
-        <label>
-          <input type="checkbox" (change)="marcarComoEnProceso(habit)" />
-          Comenzar hábito
-        </label>
+        <button (click)="marcarComoEnProceso(habit)">➡️ En proceso</button>
       </div>
     </div>
-  
+
+    <!-- IN PROGRESS -->
     <div class="column">
       <h3>En proceso</h3>
-      <div class="card" *ngFor="let habit of inProgress">
-        <strong>{{ habit.titulo }}</strong>
+      <div class="card" *ngFor="let habit of inProgress" [style.borderColor]="habit.color">
+        <p><strong>{{ habit.titulo }}</strong></p>
         <p>{{ habit.objetivo }}</p>
-        <label>
-          <input type="checkbox" (change)="marcarComoCompletado(habit)" />
-          Hábito completado
-        </label>
+        <button (click)="marcarComoCompletado(habit)">✅ Completar</button>
       </div>
     </div>
-  
+
+    <!-- COMPLETED -->
     <div class="column">
-      <h3>Finalizados</h3>
-      <div class="card" *ngFor="let habit of completed">
-        <strong>{{ habit.titulo }}</strong>
+      <h3>Completados</h3>
+      <div class="card completed" *ngFor="let habit of completed" [style.borderColor]="habit.color">
+        <p><strong>{{ habit.titulo }}</strong></p>
         <p>{{ habit.objetivo }}</p>
       </div>
     </div>
   </div>
-  
+</div>

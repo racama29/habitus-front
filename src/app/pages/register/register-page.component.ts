@@ -1,56 +1,40 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../core/auth.service';
-import { UserDataService } from '../../core/user-data/user-data.service';
 
 @Component({
-  selector: 'app-register-page',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
+  selector: 'app-register-page',
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.css']
 })
 export class RegisterPageComponent {
-  firstName = '';
-  lastName = '';
-  phone = '';
-  email = '';
-  password = '';
-  error = '';
-  
+  nombre: string = '';
+  email: string = '';
+  password: string = '';
+  error: string = '';
+  isLoading: boolean = false;
 
-  constructor(private auth: AuthService, private router: Router, private userDataService: UserDataService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  async submit() {
-    try {
-      const cred = await this.auth.register(this.email, this.password);
-      const uid = cred.user.uid;
-  
-      console.log('Guardando usuario con UID:', uid);
-      console.log('Datos:', {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        phone: this.phone,
-        email: this.email
-      });
-  
-      await this.userDataService.saveUser(uid, {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        phone: this.phone,
-        email: this.email
-      });
-  
-      this.router.navigate(['/login']);
+  submit() {
+    this.error = '';
+    this.isLoading = true;
 
-    } catch (err: any) {
-      console.error('Error al registrar o guardar:', err);
-      this.error = err.message;
-    }
+    this.authService.register(this.email, this.password, this.nombre).subscribe({
+      next: (userId: number) => {
+        this.isLoading = false;
+        this.router.navigate(['/home']);
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        this.error = 'Error al crear la cuenta. Inténtalo de nuevo.';
+        console.error(err);
+      }
+    });
   }
-  
-  
 }

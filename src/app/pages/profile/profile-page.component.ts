@@ -1,77 +1,81 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../core/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
-import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
-  styleUrls: ['./profile-page.component.css']
+  styleUrls: ['./profile-page.component.css'],
+  imports: [CommonModule, FormsModule, RouterModule]
 })
 export class ProfilePageComponent implements OnInit {
-  userEmail = '';
-  uid = '';
-  userData: any = null;
+  userId!: number;
+  userEmail!: string;
+  userData: any = {};
+  metrics: any = null;
 
-  editing = {
-    firstName: false,
-    lastName: false,
-    phone: false
+  editing: { [key: string]: boolean } = {
+    nombre: false
   };
 
-  private auth = inject(Auth);
-  private firestore = inject(Firestore);
-  private router = inject(Router);
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  async ngOnInit() {
-    const user = await this.auth.currentUser;
-    if (user) {
-      this.userEmail = user.email || '';
-      this.uid = user.uid;
-
-      const ref = doc(this.firestore, 'users', user.uid);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        this.userData = snap.data();
-      }
+  ngOnInit(): void {
+    const id = this.authService.getUserId();
+    if (!id) {
+      this.router.navigate(['/login']);
+      return;
     }
+
+    this.userId = id;
+    this.getUser();
+    this.getMetrics();
   }
 
-  enableEdit(field: 'firstName' | 'lastName' | 'phone') {
+  getUser(): void {
+    this.http.get<any>(`${environment.apiUrl}/users/${this.userId}`).subscribe(user => {
+      this.userData = user;
+      this.userEmail = user.email;
+    });
+  }
+
+  getMetrics(): void {
+    this.http.get<any>(`${environment.apiUrl}/users/${this.userId}/metrics`).subscribe(metrics => {
+      this.metrics = metrics;
+    });
+  }
+
+  enableEdit(field: string): void {
     this.editing[field] = true;
   }
 
-  async updateField(field: 'firstName' | 'lastName' | 'phone') {
-    if (!this.uid || !this.userData) return;
-    const ref = doc(this.firestore, 'users', this.uid);
-
-    try {
-      await updateDoc(ref, { [field]: this.userData[field] });
+  updateField(field: string): void {
+    this.http.put(`${environment.apiUrl}/users/${this.userId}`, {
+      [field]: this.userData[field]
+    }).subscribe(() => {
       this.editing[field] = false;
-      alert(`Campo "${field}" actualizado.`);
-    } catch (error) {
-      console.error(error);
-      alert('Error al actualizar.');
-    }
+    });
   }
 
-  async resetPassword() {
-    if (this.userEmail) {
-      await sendPasswordResetEmail(this.auth, this.userEmail);
-      alert('Correo de recuperación enviado.');
-    }
+  resetPassword(): void {
+    this.authService.resetPassword(this.userEmail);
   }
 
-  logout() {
-    this.auth.signOut();
-    this.router.navigate(['/login']);
+  logout(): void {
+    this.authService.logout();
   }
 
-  goHome() {
+  goHome(): void {
     this.router.navigate(['/home']);
   }
 }
