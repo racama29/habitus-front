@@ -28,10 +28,11 @@
 <div *ngIf="metrics">
   <h3>📊 Estadísticas de hábitos</h3>
   <ul>
-    <li>Total: {{ metrics.total }}</li>
-    <li>Completados: {{ metrics.completados }}</li>
-    <li>En proceso: {{ metrics.enProceso }}</li>
-    <li>Fallados: {{ metrics.fallidos }}</li>
+    <li>Total: {{ metrics.totalHabits }}</li>
+    <li>Completados: {{ metrics.completed }}</li>
+    <li>En proceso: {{ metrics.inProgress }}</li>
+    <li>Fallados: {{ metrics.failed }}</li>
+    <li>% completado: {{ metrics.completionRate | percent:'1.0-2' }}</li>
   </ul>
 </div>
 
