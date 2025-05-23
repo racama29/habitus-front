@@ -7,7 +7,7 @@
   --surface: #ffffff;
   --text: #333;
   --text-muted: #777;
-
+  --link: #3f51b5;
   --primary: #3f51b5;
   --accent: #ff4081;
   --success: #4caf50;
@@ -24,6 +24,7 @@ body.dark {
   --background: #1c1c1c;
   --surface: #2a2a2a;
   --text: #f1f1f1;
+  --link: #8ab4f8;
   --text-muted: #aaaaaa;
   --shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
 }
@@ -297,4 +298,33 @@ input:focus, select:focus, textarea:focus {
 .home-header-actions {
   display: flex;
   gap: 1rem;
+}
+
+.form-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-centered input,
+.form-centered select {
+  width: 100%;
+  max-width: 300px; /* Aproximadamente 20% en pantallas grandes */
+}
+
+.centered-text {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--accent);
 }
