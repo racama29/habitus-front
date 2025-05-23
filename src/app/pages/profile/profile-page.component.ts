@@ -6,13 +6,15 @@ import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartData, ChartType } from 'chart.js';
 
 @Component({
   standalone: true,
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule]
+  imports: [CommonModule, FormsModule, RouterModule, NgChartsModule]
 })
 export class ProfilePageComponent implements OnInit {
   userId!: number;
@@ -23,6 +25,21 @@ export class ProfilePageComponent implements OnInit {
   editing: { [key: string]: boolean } = {
     nombre: false
   };
+
+  public chartLabels: string[] = ['Completados', 'En Proceso', 'Fallidos'];
+  public chartColors = [{ backgroundColor: ['#4caf50', '#ff9800', '#f44336'] }];
+
+  public chartData: ChartData<'doughnut'> = {
+    labels: ['Completados', 'En Proceso', 'Fallidos'],
+    datasets: [
+      {
+        data: [0, 0, 0],
+        backgroundColor: ['#4caf50', '#ff9800', '#f44336']
+      }
+    ]
+  };
+
+  public chartType: ChartType = 'doughnut';
 
   constructor(
     private authService: AuthService,
@@ -52,6 +69,12 @@ export class ProfilePageComponent implements OnInit {
   getMetrics(): void {
     this.http.get<any>(`${environment.apiUrl}/users/${this.userId}/metrics`).subscribe(metrics => {
       this.metrics = metrics;
+
+      this.chartData.datasets[0].data = [
+        metrics.completed,
+        metrics.inProgress,
+        metrics.failed
+      ];
     });
   }
 

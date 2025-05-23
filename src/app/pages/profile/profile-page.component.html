@@ -31,10 +31,19 @@
     <li>Total: {{ metrics.totalHabits }}</li>
     <li>Completados: {{ metrics.completed }}</li>
     <li>En proceso: {{ metrics.inProgress }}</li>
-    <li>Fallados: {{ metrics.failed }}</li>
+    <li>Fallidos: {{ metrics.failed }}</li>
     <li>% completado: {{ metrics.completionRate | percent:'1.0-2' }}</li>
   </ul>
+
+  <div style="max-width: 400px; margin-top: 20px;">
+    <canvas baseChart
+            [data]="chartData"
+            [type]="chartType"
+            [legend]="true">
+    </canvas>
+  </div>
 </div>
+
 
 <!-- NAVEGACIÓN -->
 <div class="section">
