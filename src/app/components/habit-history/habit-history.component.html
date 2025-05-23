@@ -1,0 +1,12 @@
+<div class="history-section fade-in" *ngIf="updates.length > 0">
+  <h4>📜 Historial de cambios</h4>
+  <ul class="history-list">
+    <li *ngFor="let update of updates">
+      <strong>{{ update.estado | titlecase }}</strong>
+      — {{ update.fechaActualizacion | date:'short' }}
+    </li>
+  </ul>
+</div>
+<div *ngIf="updates.length === 0">
+  <p>Sin historial de cambios.</p>
+</div>

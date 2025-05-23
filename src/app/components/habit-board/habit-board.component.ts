@@ -5,10 +5,12 @@ import { Habit } from '../../core/habit/habit.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HabitHistoryComponent } from '../habit-history/habit-history.component';
+
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HabitHistoryComponent],
   selector: 'app-habit-board',
   templateUrl: './habit-board.component.html',
   styleUrls: ['./habit-board.component.css']
@@ -96,4 +98,23 @@ export class HabitBoardComponent implements OnInit {
     const updatedHabit = { ...habit, estado: 'completed' as 'completed' };
     this.habitService.updateHabit(updatedHabit).subscribe(() => this.loadHabits());
   }
+
+  esActivo(habit: Habit): boolean {
+    if (!habit.fechaFin) return true;
+    const today = new Date().toISOString().split('T')[0];
+    return habit.fechaFin >= today;
+  }
+
+  get pendingActivos(): Habit[] {
+    return this.pending.filter(h => this.esActivo(h));
+  }
+  
+  get inProgressActivos(): Habit[] {
+    return this.inProgress.filter(h => this.esActivo(h));
+  }
+  
+  get completedActivos(): Habit[] {
+    return this.completed.filter(h => this.esActivo(h));
+  }
+
 }

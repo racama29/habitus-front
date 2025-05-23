@@ -1,31 +1,30 @@
-<div class="habit-board-container">
-  <!-- BOTÓN PARA MOSTRAR FORMULARIO -->
+<div class="habit-board-container fade-in">
   <div class="section">
     <button *ngIf="!showForm" (click)="showForm = true">+ Crear nuevo hábito</button>
   </div>
 
-  <!-- FORMULARIO DE CREACIÓN -->
-  <div class="modal" *ngIf="showForm">
+  <div class="modal fade-in" *ngIf="showForm">
     <form (ngSubmit)="addHabit()">
       <h3>Nuevo hábito</h3>
+      <div class="form-group">
+        <label>Título:</label>
+        <input type="text" [(ngModel)]="newHabit.titulo" name="titulo" required />
 
-      <label>Título:</label>
-      <input type="text" [(ngModel)]="newHabit.titulo" name="titulo" required />
+        <label>Objetivo:</label>
+        <input type="text" [(ngModel)]="newHabit.objetivo" name="objetivo" required />
 
-      <label>Objetivo:</label>
-      <input type="text" [(ngModel)]="newHabit.objetivo" name="objetivo" required />
+        <label>Frecuencia:</label>
+        <select [(ngModel)]="newHabit.frecuencia" name="frecuencia" required>
+          <option value="DAILY">Diario</option>
+          <option value="WEEKLY">Semanal</option>
+        </select>
 
-      <label>Frecuencia:</label>
-      <select [(ngModel)]="newHabit.frecuencia" name="frecuencia" required>
-        <option value="DAILY">Diario</option>
-        <option value="WEEKLY">Semanal</option>
-      </select>
+        <label>Fecha de finalización (opcional):</label>
+        <input type="date" [(ngModel)]="newHabit.fechaFin" name="fechaFin" />
 
-      <label>Fecha de finalización (opcional):</label>
-      <input type="date" [(ngModel)]="newHabit.fechaFin" name="fechaFin" />
-
-      <label>Color:</label>
-      <input type="color" [(ngModel)]="newHabit.color" name="color" />
+        <label>Color:</label>
+        <input type="color" [(ngModel)]="newHabit.color" name="color" />
+      </div>
 
       <div class="form-buttons">
         <button type="submit">Guardar</button>
@@ -34,34 +33,33 @@
     </form>
   </div>
 
-  <!-- TABLERO DE HÁBITOS -->
   <div class="columns">
-    <!-- PENDING -->
     <div class="column">
       <h3>Pendientes</h3>
-      <div class="card" *ngFor="let habit of pending" [style.borderColor]="habit.color">
-        <p><strong>{{ habit.titulo }}</strong></p>
+      <div class="card fade-in" *ngFor="let habit of pendingActivos" [style.borderColor]="habit.color">
+        <h4>{{ habit.titulo }}</h4>
         <p>{{ habit.objetivo }}</p>
-        <button (click)="marcarComoEnProceso(habit)">➡️ En proceso</button>
+        <button (click)="marcarComoEnProceso(habit)">➞ En proceso</button>
+        <app-habit-history [habitId]="habit.id"></app-habit-history>
       </div>
     </div>
 
-    <!-- IN PROGRESS -->
     <div class="column">
       <h3>En proceso</h3>
-      <div class="card" *ngFor="let habit of inProgress" [style.borderColor]="habit.color">
-        <p><strong>{{ habit.titulo }}</strong></p>
+      <div class="card fade-in" *ngFor="let habit of inProgressActivos" [style.borderColor]="habit.color">
+        <h4>{{ habit.titulo }}</h4>
         <p>{{ habit.objetivo }}</p>
         <button (click)="marcarComoCompletado(habit)">✅ Completar</button>
+        <app-habit-history [habitId]="habit.id"></app-habit-history>
       </div>
     </div>
 
-    <!-- COMPLETED -->
     <div class="column">
       <h3>Completados</h3>
-      <div class="card completed" *ngFor="let habit of completed" [style.borderColor]="habit.color">
-        <p><strong>{{ habit.titulo }}</strong></p>
+      <div class="card completed fade-in" *ngFor="let habit of completedActivos" [style.borderColor]="habit.color">
+        <h4>{{ habit.titulo }}</h4>
         <p>{{ habit.objetivo }}</p>
+        <app-habit-history [habitId]="habit.id"></app-habit-history>
       </div>
     </div>
   </div>

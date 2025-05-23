@@ -1,6 +1,8 @@
 <div class="home-header">
   <h1>¡Bienvenido/a, {{ userName }}!</h1>
-  <button class="profile-button" (click)="goToProfile()">Perfil</button>
+  <div class="home-header-actions">
+    <button class="profile-button" (click)="goToProfile()">Perfil</button>
+  </div>
 </div>
 
 <app-habit-board></app-habit-board>

@@ -1,52 +1,55 @@
-<h2>Perfil del Usuario</h2>
-
-<!-- EMAIL -->
-<div class="section">
-  <p><strong>Email:</strong> {{ userEmail }}</p>
-</div>
-
-<!-- NOMBRE -->
-<div class="section">
-  <label><strong>Nombre:</strong></label>
-  <div *ngIf="!editing['nombre']">
-    {{ userData?.nombre }}
-    <button (click)="enableEdit('nombre')">Actualizar</button>
+<div class="profile-container fade-in">
+  <!-- Encabezado -->
+  <div class="profile-header card">
+    <div class="profile-info">
+      <img src="https://ui-avatars.com/api/?name={{ userData?.nombre }}" alt="Avatar" class="avatar" />
+      <div>
+        <h2>{{ userData?.nombre || 'Usuario' }}</h2>
+        <p class="muted">{{ userEmail }}</p>
+      </div>
+    </div>
+    <button class="logout-button" (click)="logout()">Cerrar sesión</button>
   </div>
-  <div *ngIf="editing['nombre']">
-    <input [(ngModel)]="userData.nombre" />
-    <button (click)="updateField('nombre')">Guardar</button>
+
+  <!-- Información editable -->
+  <div class="card profile-section">
+    <h3>✏️ Información personal</h3>
+    <div class="field-row">
+      <label>Nombre</label>
+      <div *ngIf="!editing['nombre']">
+        {{ userData?.nombre }}
+        <button (click)="enableEdit('nombre')">Editar</button>
+      </div>
+      <div *ngIf="editing['nombre']">
+        <input [(ngModel)]="userData.nombre" />
+        <button (click)="updateField('nombre')">Guardar</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- CONTRASEÑA -->
-<div class="section">
-  <h3>Cambiar contraseña</h3>
-  <button (click)="resetPassword()">Enviar correo de recuperación</button>
-</div>
-
-<!-- MÉTRICAS -->
-<div *ngIf="metrics">
-  <h3>📊 Estadísticas de hábitos</h3>
-  <ul>
-    <li>Total: {{ metrics.totalHabits }}</li>
-    <li>Completados: {{ metrics.completed }}</li>
-    <li>En proceso: {{ metrics.inProgress }}</li>
-    <li>Fallidos: {{ metrics.failed }}</li>
-    <li>% completado: {{ metrics.completionRate | percent:'1.0-2' }}</li>
-  </ul>
-
-  <div style="max-width: 400px; margin-top: 20px;">
-    <canvas baseChart
-            [data]="chartData"
-            [type]="chartType"
-            [legend]="true">
-    </canvas>
+  <!-- Contraseña -->
+  <div class="card profile-section">
+    <h3>🔐 Seguridad</h3>
+    <button (click)="resetPassword()">Enviar correo para cambiar contraseña</button>
   </div>
-</div>
 
+  <!-- Estadísticas -->
+  <div class="card profile-section" *ngIf="metrics">
+    <h3>📊 Progreso de hábitos</h3>
+    <ul class="stats">
+      <li><strong>Total:</strong> {{ metrics.totalHabits }}</li>
+      <li><strong>Completados:</strong> {{ metrics.completed }}</li>
+      <li><strong>En proceso:</strong> {{ metrics.inProgress }}</li>
+      <li><strong>Fallidos:</strong> {{ metrics.failed }}</li>
+      <li><strong>Completado:</strong> {{ metrics.completionRate | percent:'1.0-2' }}</li>
+    </ul>
+    <div style="max-width: 400px; margin: 20px auto;">
+      <canvas baseChart [data]="chartData" [type]="chartType" [legend]="true"></canvas>
+    </div>
+  </div>
 
-<!-- NAVEGACIÓN -->
-<div class="section">
-  <button (click)="goHome()">Volver a Home</button>
-  <button (click)="logout()">Cerrar sesión</button>
+  <!-- Volver -->
+  <div class="section">
+    <button (click)="goHome()">🏠 Volver al tablero</button>
+  </div>
 </div>
