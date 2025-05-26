@@ -328,3 +328,13 @@ a {
 a:hover {
   color: var(--accent);
 }
+
+.centered-text {
+  text-align: center;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 1rem;
+}

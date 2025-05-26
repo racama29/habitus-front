@@ -11,21 +11,17 @@
     <button class="logout-button" (click)="logout()">Cerrar sesión</button>
   </div>
 
-  <!-- Información editable -->
+  <!-- Información no editable -->
   <div class="card profile-section">
-    <h3>✏️ Información personal</h3>
+    <h3>👤 Información personal</h3>
     <div class="field-row">
       <label>Nombre</label>
-      <div *ngIf="!editing['nombre']">
+      <div>
         {{ userData?.nombre }}
-        <button (click)="enableEdit('nombre')">Editar</button>
-      </div>
-      <div *ngIf="editing['nombre']">
-        <input [(ngModel)]="userData.nombre" />
-        <button (click)="updateField('nombre')">Guardar</button>
       </div>
     </div>
   </div>
+
 
   <!-- Contraseña -->
   <div class="card profile-section">

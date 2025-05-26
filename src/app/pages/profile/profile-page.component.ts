@@ -82,14 +82,6 @@ export class ProfilePageComponent implements OnInit {
     this.editing[field] = true;
   }
 
-  updateField(field: string): void {
-    this.http.put(`${environment.apiUrl}/users/${this.userId}`, {
-      [field]: this.userData[field]
-    }).subscribe(() => {
-      this.editing[field] = false;
-    });
-  }
-
   resetPassword(): void {
     this.authService.resetPassword(this.userEmail);
   }
