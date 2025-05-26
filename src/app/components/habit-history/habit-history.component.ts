@@ -18,7 +18,7 @@ export class HabitHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.habitId) {
-      this.http.get<any[]>(`${environment.apiUrl}/habits/${this.habitId}/history`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/habits/${this.habitId}/history`)
         .subscribe(data => {
           this.updates = data;
         });

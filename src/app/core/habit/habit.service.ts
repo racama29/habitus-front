@@ -28,27 +28,27 @@ export class HabitService {
   constructor(private http: HttpClient) {}
 
   getHabitsByUser(userId: string): Observable<Habit[]> {
-    return this.http.get<Habit[]>(`${environment.apiUrl}/habits/user/${userId}`);
+    return this.http.get<Habit[]>(`${environment.apiUrl}/api/habits/user/${userId}`);
   }  
   
   createHabit(habit: any) {
-    return this.http.post<Habit>(`${this.apiUrl}/habits/${habit.userId}`, habit);
+    return this.http.post<Habit>(`${this.apiUrl}/api/habits/${habit.userId}`, habit);
   }
 
   updateHabitState(id: number, estado: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/habits/${id}/estado`, { estado });
+    return this.http.put(`${this.apiUrl}/api/habits/${id}/estado`, { estado });
   }
   
   getUserMetrics(userId: string): Observable<HabitMetrics> {
-    return this.http.get<HabitMetrics>(`${this.apiUrl}/habits/metrics/${userId}`);
+    return this.http.get<HabitMetrics>(`${this.apiUrl}/api/habits/metrics/${userId}`);
   }
   
   addHabit(userId: number, habit: Habit): Observable<Habit> {
-    return this.http.post<Habit>(`${this.apiUrl}/habits/user/${userId}`, habit);
+    return this.http.post<Habit>(`${this.apiUrl}/api/habits/user/${userId}`, habit);
   }
   
   updateHabit(habit: Habit): Observable<Habit> {
-    return this.http.put<Habit>(`${this.apiUrl}/habits/${habit.id}`, habit);
+    return this.http.put<Habit>(`${this.apiUrl}/api/habits/${habit.id}`, habit);
   }
 
 }

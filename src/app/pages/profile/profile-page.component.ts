@@ -60,14 +60,14 @@ export class ProfilePageComponent implements OnInit {
   }
 
   getUser(): void {
-    this.http.get<any>(`${environment.apiUrl}/users/${this.userId}`).subscribe(user => {
+    this.http.get<any>(`${environment.apiUrl}/api/users/${this.userId}`).subscribe(user => {
       this.userData = user;
       this.userEmail = user.email;
     });
   }
 
   getMetrics(): void {
-    this.http.get<any>(`${environment.apiUrl}/users/${this.userId}/metrics`).subscribe(metrics => {
+    this.http.get<any>(`${environment.apiUrl}/api/users/${this.userId}/metrics`).subscribe(metrics => {
       this.metrics = metrics;
 
       this.chartData.datasets[0].data = [

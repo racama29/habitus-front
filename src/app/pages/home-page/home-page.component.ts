@@ -30,7 +30,7 @@ export class HomePageComponent implements OnInit {
       return;
     }
 
-    this.http.get<any>(`${environment.apiUrl}/users/${userId}`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/api/users/${userId}`).subscribe({
       next: user => {
         this.userName = user.nombre;
       },
