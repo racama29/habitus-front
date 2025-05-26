@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Habit {
   id: number;
@@ -22,27 +23,28 @@ export interface HabitMetrics {
 
 @Injectable({ providedIn: 'root' })
 export class HabitService {
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   getHabitsByUser(userId: string): Observable<Habit[]> {
-    return this.http.get<Habit[]>(`http://localhost:8080/api/habits/user/${userId}`);
+    return this.http.get<Habit[]>(`${environment.apiUrl}/habits/user/${userId}`);
   }  
   
   createHabit(habit: any) {
-    return this.http.post<Habit>(`http://localhost:8080/api/habits/${habit.userId}`, habit);
+    return this.http.post<Habit>(`${this.apiUrl}/habits/${habit.userId}`, habit);
   }
 
   updateHabitState(id: number, estado: string): Observable<any> {
-    return this.http.put(`http://localhost:8080/api/habits/${id}/estado`, { estado });
+    return this.http.put(`${this.apiUrl}/habits/${id}/estado`, { estado });
   }
   
   getUserMetrics(userId: string): Observable<HabitMetrics> {
-    return this.http.get<HabitMetrics>(`http://localhost:8080/api/habits/metrics/${userId}`);
+    return this.http.get<HabitMetrics>(`${this.apiUrl}/habits/metrics/${userId}`);
   }
   
   addHabit(userId: number, habit: Habit): Observable<Habit> {
-    return this.http.post<Habit>(`http://localhost:8080/api/habits/user/${userId}`, habit);
+    return this.http.post<Habit>(`${this.apiUrl}/habits/user/${userId}`, habit);
   }
   
   updateHabit(habit: Habit): Observable<Habit> {
