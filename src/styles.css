@@ -111,6 +111,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1.5rem;
+  border: 3px solid transparent;
   margin-bottom: 1.5rem;
   transition: transform var(--transition), box-shadow var(--transition);
 }
