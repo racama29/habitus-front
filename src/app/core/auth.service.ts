@@ -7,7 +7,6 @@ import { Observable, from, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { sendPasswordResetEmail } from '@angular/fire/auth';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = environment.apiUrl;
@@ -26,7 +25,7 @@ export class AuthService {
       switchMap(res => {
         const email = res.user?.email;
         if (!email) throw new Error('No se encontró el email');
-        return this.http.get<any>(`${this.apiUrl}/users/by-email?email=${email}`);
+        return this.http.get<any>(`${this.apiUrl}/api/users/by-email?email=${email}`);
       }),
       tap(user => {
         localStorage.setItem('userId', user.userId.toString());
@@ -42,7 +41,7 @@ export class AuthService {
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap(() => {
         const newUser = { email, nombre };
-        return this.http.post<any>(`${this.apiUrl}/users/register`, newUser);
+        return this.http.post<any>(`${this.apiUrl}/api/users/register`, newUser);
       }),
       tap(user => {
         localStorage.setItem('userId', user.userId.toString());
@@ -76,6 +75,9 @@ export class AuthService {
     });
   }
 
+  /**
+   * Enviar email de recuperación de contraseña
+   */
   resetPassword(email: string): void {
     sendPasswordResetEmail(this.auth, email)
       .then(() => {

@@ -48,7 +48,7 @@ export class HabitService {
   }
   
   updateHabit(habit: Habit): Observable<Habit> {
-    return this.http.put<Habit>(`http://localhost:8080/api/habits/${habit.id}`, habit);
+    return this.http.put<Habit>(`${this.apiUrl}/habits/${habit.id}`, habit);
   }
 
 }
