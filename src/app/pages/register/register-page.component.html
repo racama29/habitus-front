@@ -1,4 +1,7 @@
 <div class="register-container fade-in">
+  <div class="centered-text">
+    <img src="assets/images/habitus.png" alt="Habitus logo" class="login-logo" />
+  </div>
   <h2 class="centered-text">Crear cuenta</h2>
   <form class="auth-form" class="form-centered" (ngSubmit)="submit()">
     <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="Nombre completo" required />
@@ -10,8 +13,6 @@
     <p class="error">{{ error }}</p>
   </div>  
   <div class="centered-text">
-    <a routerLink="/login">
-      ¿Ya tienes una cuenta? Inicia sesión
-    </a>
+    <a routerLink="/login">¿Ya tienes una cuenta? Inicia sesión</a>
   </div>
 </div>
