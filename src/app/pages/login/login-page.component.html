@@ -1,7 +1,8 @@
 <div class="login-container fade-in">
   <div class="centered-text">
-    <img src="assets/images/habitus.png" alt="Habitus logo" class="login-logo" />
-  </div>
+    <img [src]="isDarkMode ? 'assets/images/habitus-light.png' : 'assets/images/habitus-dark.png'"
+    alt="Habitus logo"
+    class="login-logo" />  </div>
   <h2 class="centered-text">Iniciar sesión</h2>
   <form class="auth-form" class="form-centered" (ngSubmit)="submit()">
     <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />

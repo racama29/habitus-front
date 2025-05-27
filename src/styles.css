@@ -1,5 +1,5 @@
 /* ===================== */
-/* 🎨 Variables globales */
+/*    Variables globales */
 /* ===================== */
 :root {
   --font: 'Segoe UI', 'Poppins', sans-serif;
@@ -343,6 +343,9 @@ a:hover {
 }
 
 .login-logo {
-  width: 360px;
-  margin-bottom: 1rem;
+  width: 240px;
+  height: 160px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 1rem auto;
 }
