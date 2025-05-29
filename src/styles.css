@@ -348,4 +348,10 @@ a:hover {
   object-fit: contain;
   display: block;
   margin: 0 auto 1rem auto;
+  transition: content 0.3s ease;
+}
+
+/* Cambia automáticamente el logo si el body tiene clase "dark" */
+body.dark .login-logo {
+  content: url('assets/images/logo-dark.png');
 }
