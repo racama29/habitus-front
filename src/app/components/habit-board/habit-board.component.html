@@ -39,6 +39,10 @@
       <div class="card fade-in" *ngFor="let habit of pendingActivos" [style.borderColor]="habit.color">
         <h4>{{ habit.titulo }}</h4>
         <p>{{ habit.objetivo }}</p>
+        <p>Frecuencia: 
+          {{ habit.frecuencia === 'DAILY' ? 'diario' : 
+             habit.frecuencia === 'WEEKLY' ? 'semanal' : habit.frecuencia }}
+        </p>
         <button (click)="marcarComoEnProceso(habit)">➞ En proceso</button>
         <app-habit-history [habitId]="habit.id"></app-habit-history>
       </div>
@@ -49,6 +53,10 @@
       <div class="card fade-in" *ngFor="let habit of inProgressActivos" [style.borderColor]="habit.color">
         <h4>{{ habit.titulo }}</h4>
         <p>{{ habit.objetivo }}</p>
+        <p>Frecuencia: 
+          {{ habit.frecuencia === 'DAILY' ? 'diario' : 
+             habit.frecuencia === 'WEEKLY' ? 'semanal' : habit.frecuencia }}
+        </p>
         <button (click)="marcarComoCompletado(habit)">✅ Completar</button>
         <app-habit-history [habitId]="habit.id"></app-habit-history>
       </div>
@@ -59,6 +67,10 @@
       <div class="card completed fade-in" *ngFor="let habit of completedActivos" [style.borderColor]="habit.color">
         <h4>{{ habit.titulo }}</h4>
         <p>{{ habit.objetivo }}</p>
+        <p>Frecuencia: 
+          {{ habit.frecuencia === 'DAILY' ? 'diario' : 
+             habit.frecuencia === 'WEEKLY' ? 'semanal' : habit.frecuencia }}
+        </p>
         <app-habit-history [habitId]="habit.id"></app-habit-history>
       </div>
     </div>
